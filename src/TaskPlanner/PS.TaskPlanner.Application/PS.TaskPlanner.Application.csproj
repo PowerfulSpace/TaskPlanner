@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PS.TaskPlanner.Domain\PS.TaskPlanner.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

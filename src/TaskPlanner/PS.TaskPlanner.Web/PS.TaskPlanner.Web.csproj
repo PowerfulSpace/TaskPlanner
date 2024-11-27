@@ -6,4 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PS.TaskPlanner.Application\PS.TaskPlanner.Application.csproj" />
+    <ProjectReference Include="..\PS.TaskPlanner.Infrastructure\PS.TaskPlanner.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
