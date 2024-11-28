@@ -11,6 +11,8 @@ namespace PS.TaskPlanner.Domain.Entities
         public WorkTaskPriority Priority { get; set; } // Приоритет задачи
         public DateTime? DueDate { get; set; } // Крайний срок выполнения
         public Guid? AssignedToUserId { get; set; } // ID назначенного пользователя
+        public AppUser? AssignedToUser { get; set; } // Назначенный пользователь
         public Guid ProjectId { get; set; } // ID связанного проекта
+        public Project? Project { get; set; } // Связанный проект
     }
 }
