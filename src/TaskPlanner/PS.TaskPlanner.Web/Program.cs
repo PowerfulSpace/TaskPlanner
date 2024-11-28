@@ -23,21 +23,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-//// Выполняем сидинг
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    var context = services.GetRequiredService<TaskPlannerDbContext>();
-
-//    // Проверяем, если данные (например, роли и пользователи) отсутствуют, выполняем сидинг
-//    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-//    if (!await roleManager.RoleExistsAsync("Admin"))
-//    {
-//        // Если роль Admin отсутствует, выполняем сидинг
-//        await ApplicationDbContextSeed.SeedAsync(services);
-//    }
-//}
-
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
