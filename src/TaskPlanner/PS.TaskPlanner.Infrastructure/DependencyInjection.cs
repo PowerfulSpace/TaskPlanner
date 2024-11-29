@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PS.TaskPlanner.Application.Common.Interfaces.Persistence;
 using PS.TaskPlanner.Infrastructure.Authentication.Identity;
 using PS.TaskPlanner.Infrastructure.Mapping;
 using PS.TaskPlanner.Infrastructure.Persistence;
+using PS.TaskPlanner.Infrastructure.Persistence.Repositories;
 
 namespace PS.TaskPlanner.Infrastructure
 {
@@ -16,6 +18,8 @@ namespace PS.TaskPlanner.Infrastructure
                .AddPersistance(configuration);
 
             services.AddMapping(); // Регистрация маппинга
+
+            services.AddScoped<IWorkTaskRepository, WorkTaskRepository>();
 
             return services;
         }
