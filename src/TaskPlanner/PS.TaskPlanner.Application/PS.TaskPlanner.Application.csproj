@@ -22,12 +22,6 @@
     <Folder Include="CQRS\AppUsers\Queries\GetAppUserById\" />
     <Folder Include="CQRS\AppUsers\Queries\GetAppUserByEmail\" />
     <Folder Include="CQRS\AppUsers\Queries\GetAllAppUsers\" />
-    <Folder Include="CQRS\Projects\Commands\CreateProject\" />
-    <Folder Include="CQRS\Projects\Commands\UpdateProject\" />
-    <Folder Include="CQRS\Projects\Commands\DeleteProject\" />
-    <Folder Include="CQRS\Projects\Queries\GetProjectById\" />
-    <Folder Include="CQRS\Projects\Queries\GetAllProjects\" />
-    <Folder Include="CQRS\Projects\Queries\GetProjectsByUserId\" />
   </ItemGroup>
 
 </Project>
