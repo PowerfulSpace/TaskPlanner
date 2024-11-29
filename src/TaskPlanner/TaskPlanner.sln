@@ -11,13 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{12036B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{15E9BA68-EDCC-4490-8DFE-DD7E12BE4592}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS.TaskPlanner.Web", "PS.TaskPlanner.Web\PS.TaskPlanner.Web.csproj", "{2822A9AD-4B24-4091-B287-40C8BDCA73C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PS.TaskPlanner.Web", "PS.TaskPlanner.Web\PS.TaskPlanner.Web.csproj", "{2822A9AD-4B24-4091-B287-40C8BDCA73C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS.TaskPlanner.Application", "PS.TaskPlanner.Application\PS.TaskPlanner.Application.csproj", "{86E953F2-9FDE-41E2-9F13-45A057EAD752}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PS.TaskPlanner.Application", "PS.TaskPlanner.Application\PS.TaskPlanner.Application.csproj", "{86E953F2-9FDE-41E2-9F13-45A057EAD752}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS.TaskPlanner.Domain", "PS.TaskPlanner.Domain\PS.TaskPlanner.Domain.csproj", "{8BABA8B0-1AA9-4051-AAAC-14CF5B731CC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PS.TaskPlanner.Domain", "PS.TaskPlanner.Domain\PS.TaskPlanner.Domain.csproj", "{8BABA8B0-1AA9-4051-AAAC-14CF5B731CC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PS.TaskPlanner.Infrastructure", "PS.TaskPlanner.Infrastructure\PS.TaskPlanner.Infrastructure.csproj", "{A3A1EB7B-74DC-46E8-B752-18C5DE133D03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PS.TaskPlanner.Infrastructure", "PS.TaskPlanner.Infrastructure\PS.TaskPlanner.Infrastructure.csproj", "{A3A1EB7B-74DC-46E8-B752-18C5DE133D03}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -17,4 +17,24 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\AppUsers\Commands\UpdateAppUser\" />
+    <Folder Include="CQRS\AppUsers\Queries\GetAppUserById\" />
+    <Folder Include="CQRS\AppUsers\Queries\GetAppUserByEmail\" />
+    <Folder Include="CQRS\AppUsers\Queries\GetAllAppUsers\" />
+    <Folder Include="CQRS\Projects\Commands\CreateProject\" />
+    <Folder Include="CQRS\Projects\Commands\UpdateProject\" />
+    <Folder Include="CQRS\Projects\Commands\DeleteProject\" />
+    <Folder Include="CQRS\Projects\Queries\GetProjectById\" />
+    <Folder Include="CQRS\Projects\Queries\GetAllProjects\" />
+    <Folder Include="CQRS\Projects\Queries\GetProjectsByUserId\" />
+    <Folder Include="CQRS\WorkTasks\Commands\CreateWorkTask\" />
+    <Folder Include="CQRS\WorkTasks\Commands\UpdateWorkTask\" />
+    <Folder Include="CQRS\WorkTasks\Commands\DeleteWorkTask\" />
+    <Folder Include="CQRS\WorkTasks\Queries\GetWorkTaskById\" />
+    <Folder Include="CQRS\WorkTasks\Queries\GetWorkTasksByProjectId\" />
+    <Folder Include="CQRS\WorkTasks\Queries\GetWorkTasksByUserId\" />
+    <Folder Include="CQRS\WorkTasks\Queries\GetAllWorkTasks\" />
+  </ItemGroup>
+
 </Project>
