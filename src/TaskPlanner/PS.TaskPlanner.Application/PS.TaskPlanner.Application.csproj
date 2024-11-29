@@ -28,13 +28,6 @@
     <Folder Include="CQRS\Projects\Queries\GetProjectById\" />
     <Folder Include="CQRS\Projects\Queries\GetAllProjects\" />
     <Folder Include="CQRS\Projects\Queries\GetProjectsByUserId\" />
-    <Folder Include="CQRS\WorkTasks\Commands\CreateWorkTask\" />
-    <Folder Include="CQRS\WorkTasks\Commands\UpdateWorkTask\" />
-    <Folder Include="CQRS\WorkTasks\Commands\DeleteWorkTask\" />
-    <Folder Include="CQRS\WorkTasks\Queries\GetWorkTaskById\" />
-    <Folder Include="CQRS\WorkTasks\Queries\GetWorkTasksByProjectId\" />
-    <Folder Include="CQRS\WorkTasks\Queries\GetWorkTasksByUserId\" />
-    <Folder Include="CQRS\WorkTasks\Queries\GetAllWorkTasks\" />
   </ItemGroup>
 
 </Project>
