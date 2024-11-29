@@ -20,6 +20,8 @@ namespace PS.TaskPlanner.Infrastructure
             services.AddMapping(); // Регистрация маппинга
 
             services.AddScoped<IWorkTaskRepository, WorkTaskRepository>();
+            services.AddScoped<IProjectRepository, ProjectRepository>();
+            services.AddScoped<IAppUserRepository, AppUserRepository>();
 
             return services;
         }
