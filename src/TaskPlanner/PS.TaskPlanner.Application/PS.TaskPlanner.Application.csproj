@@ -17,11 +17,4 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.11" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CQRS\AppUsers\Commands\UpdateAppUser\" />
-    <Folder Include="CQRS\AppUsers\Queries\GetAppUserById\" />
-    <Folder Include="CQRS\AppUsers\Queries\GetAppUserByEmail\" />
-    <Folder Include="CQRS\AppUsers\Queries\GetAllAppUsers\" />
-  </ItemGroup>
-
 </Project>
