@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using PS.TaskPlanner.Application.Dtos;
-using PS.TaskPlanner.Domain.Entities;
 
 namespace PS.TaskPlanner.Application.CQRS.AppUsers.Commands.UpdateAppUser
 {

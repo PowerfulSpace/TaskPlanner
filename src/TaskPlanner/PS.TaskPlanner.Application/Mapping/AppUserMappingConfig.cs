@@ -7,13 +7,6 @@ namespace PS.TaskPlanner.Application.Mapping
 {
     public class AppUserMappingConfig : IRegister
     {
-        //public void Register(TypeAdapterConfig config)
-        //{
-        //    config.NewConfig<UpdateAppUserCommand, AppUser>()
-        //        .Map(dest => dest.UserName, src => src.UserName) // Полное имя - пока используем имя пользователя (можно расширить)
-        //        .Map(dest => dest.CreatedAt, src => src.CreatedAt); // Дата создания пользователя
-        //}
-
         public void Register(TypeAdapterConfig config)
         {
             // Настройка маппинга для UpdateAppUserCommand -> AppUser
@@ -24,6 +17,12 @@ namespace PS.TaskPlanner.Application.Mapping
             config.NewConfig<AppUser, AppUserDto>()
                 .IgnoreNullValues(true); // Игнорировать null, чтобы не затирать существующие значения
 
+            //config.NewConfig<UpdateAppUserCommand, AppUser>()
+            //    .Map(dest => dest.UserName, src => src.UserName)
+            //    .Map(dest => dest.Email, src => src.Email)
+            //    .Map(dest => dest.FullName, src => src.FullName)
+            //    .Map(dest => dest.IsActive, src => src.IsActive)
+            //    .Ignore(dest => dest.CreatedAt);
         }
     }
 }
