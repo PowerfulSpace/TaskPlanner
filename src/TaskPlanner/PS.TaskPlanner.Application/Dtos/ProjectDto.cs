@@ -1,6 +1,4 @@
-﻿using PS.TaskPlanner.Application.Dtos.WorkTasks;
-
-namespace PS.TaskPlanner.Application.Dtos.Projects
+﻿namespace PS.TaskPlanner.Application.Dtos
 {
     public class ProjectDto
     {

@@ -1,4 +1,4 @@
-﻿namespace PS.TaskPlanner.Application.Dtos.WorkTasks
+﻿namespace PS.TaskPlanner.Application.Dtos
 {
     public class WorkTaskDto
     {

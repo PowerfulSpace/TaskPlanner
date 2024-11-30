@@ -1,4 +1,4 @@
-﻿namespace PS.TaskPlanner.Application.Dtos.AppUsers
+﻿namespace PS.TaskPlanner.Application.Dtos
 {
     public class AppUserDto
     {
