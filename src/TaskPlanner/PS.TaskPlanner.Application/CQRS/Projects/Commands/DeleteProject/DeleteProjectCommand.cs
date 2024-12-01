@@ -1,6 +1,9 @@
-﻿namespace PS.TaskPlanner.Application.CQRS.Projects.Commands.DeleteProject
+﻿using MediatR;
+
+namespace PS.TaskPlanner.Application.CQRS.Projects.Commands.DeleteProject
 {
-    public class DeleteProjectCommand
+    public class DeleteProjectCommand : IRequest<Unit>
     {
+        public Guid Id { get; set; }
     }
 }
