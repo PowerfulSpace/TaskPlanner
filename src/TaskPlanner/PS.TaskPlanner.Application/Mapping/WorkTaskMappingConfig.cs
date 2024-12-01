@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using PS.TaskPlanner.Application.CQRS.WorkTasks.Commands.CreateWorkTask;
 using PS.TaskPlanner.Application.CQRS.WorkTasks.Commands.UpdateWorkTask;
 using PS.TaskPlanner.Domain.Entities;
 
@@ -10,6 +11,9 @@ namespace PS.TaskPlanner.Application.Mapping
         {
             config.NewConfig<UpdateWorkTaskCommand, WorkTask>()
                      .IgnoreNullValues(true);
+
+            config.NewConfig<CreateWorkTaskCommand, WorkTask>()
+                    .IgnoreNullValues(true);
         }
     }
 }

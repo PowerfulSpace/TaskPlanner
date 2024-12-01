@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using PS.TaskPlanner.Application.Common.Interfaces.Persistence;
 using PS.TaskPlanner.Domain.Entities;
 
@@ -15,14 +16,7 @@ namespace PS.TaskPlanner.Application.CQRS.Projects.Commands.CreateProject
 
         public async Task<Project> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
-            var project = new Project
-            {
-                Title = request.Title,
-                Description = request.Description,
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
-                OwnerId = request.OwnerId
-            };
+            var project = request.Adapt<Project>();
 
             await _projectRepository.AddAsync(project);
             return project;

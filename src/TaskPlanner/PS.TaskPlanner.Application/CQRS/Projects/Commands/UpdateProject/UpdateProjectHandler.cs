@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Mapster;
+using MediatR;
 using PS.TaskPlanner.Application.Common.Interfaces.Persistence;
 using PS.TaskPlanner.Domain.Entities;
 
@@ -20,11 +21,7 @@ namespace PS.TaskPlanner.Application.CQRS.Projects.Commands.UpdateProject
             if (project == null)
                 throw new KeyNotFoundException($"Project with ID {request.Id} not found.");
 
-            project.Title = request.Title;
-            project.Description = request.Description;
-            project.StartDate = request.StartDate;
-            project.EndDate = request.EndDate;
-            project.OwnerId = request.OwnerId;
+            request.Adapt(project);
 
             await _projectRepository.UpdateAsync(project);
 
