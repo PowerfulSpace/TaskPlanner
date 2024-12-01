@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PS.TaskPlanner.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using PS.TaskPlanner.Infrastructure.Persistence;
 namespace PS.TaskPlanner.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(TaskPlannerDbContext))]
-    partial class TaskPlannerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241201024254_AddingPropertyIsActive")]
+    partial class AddingPropertyIsActive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

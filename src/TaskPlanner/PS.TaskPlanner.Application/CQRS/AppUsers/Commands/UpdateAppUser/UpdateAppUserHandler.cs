@@ -1,11 +1,11 @@
 ﻿using Mapster;
 using MediatR;
 using PS.TaskPlanner.Application.Common.Interfaces.Persistence;
-using PS.TaskPlanner.Application.Dtos;
+using PS.TaskPlanner.Domain.Entities;
 
 namespace PS.TaskPlanner.Application.CQRS.AppUsers.Commands.UpdateAppUser
 {
-    public class UpdateAppUserHandler : IRequestHandler<UpdateAppUserCommand, AppUserDto>
+    public class UpdateAppUserHandler : IRequestHandler<UpdateAppUserCommand, AppUser>
     {
         private readonly IAppUserRepository _appUserRepository;
 
@@ -14,9 +14,10 @@ namespace PS.TaskPlanner.Application.CQRS.AppUsers.Commands.UpdateAppUser
             _appUserRepository = appUserRepository;
         }
 
-        public async Task<AppUserDto> Handle(UpdateAppUserCommand request, CancellationToken cancellationToken)
+        public async Task<AppUser> Handle(UpdateAppUserCommand request, CancellationToken cancellationToken)
         {
             var user = await _appUserRepository.GetByIdAsync(request.Id);
+
             if (user == null)
             {
                 throw new KeyNotFoundException($"User with ID {request.Id} not found.");
@@ -26,7 +27,7 @@ namespace PS.TaskPlanner.Application.CQRS.AppUsers.Commands.UpdateAppUser
 
             await _appUserRepository.UpdateAsync(user);
 
-            return user.Adapt<AppUserDto>();
+            return user;
 
         }
     }
