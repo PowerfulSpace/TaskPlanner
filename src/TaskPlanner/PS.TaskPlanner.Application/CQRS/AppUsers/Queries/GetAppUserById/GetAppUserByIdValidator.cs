@@ -1,6 +1,13 @@
-﻿namespace PS.TaskPlanner.Application.CQRS.AppUsers.Queries.GetAppUserById
+﻿using FluentValidation;
+
+namespace PS.TaskPlanner.Application.CQRS.AppUsers.Queries.GetAppUserById
 {
-    public class GetAppUserByIdValidator
+    public class GetAppUserByIdValidator : AbstractValidator<GetAppUserByIdQuery>
     {
+        public GetAppUserByIdValidator()
+        {
+            RuleFor(x => x.Id)
+                .NotEmpty().WithMessage("User ID is required.");
+        }
     }
 }
