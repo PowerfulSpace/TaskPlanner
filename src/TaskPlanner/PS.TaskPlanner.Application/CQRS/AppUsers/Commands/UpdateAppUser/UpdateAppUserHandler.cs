@@ -16,20 +16,18 @@ namespace PS.TaskPlanner.Application.CQRS.AppUsers.Commands.UpdateAppUser
 
         public async Task<AppUserDto> Handle(UpdateAppUserCommand request, CancellationToken cancellationToken)
         {
-            // Получение пользователя из базы данных
             var user = await _appUserRepository.GetByIdAsync(request.Id);
             if (user == null)
             {
                 throw new KeyNotFoundException($"User with ID {request.Id} not found.");
             }
 
-            // Маппинг командных данных на сущность
             request.Adapt(user);
 
-            // Сохранение изменений
             await _appUserRepository.UpdateAsync(user);
 
             return user.Adapt<AppUserDto>();
+
         }
     }
 }

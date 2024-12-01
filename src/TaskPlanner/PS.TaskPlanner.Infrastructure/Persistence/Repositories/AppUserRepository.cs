@@ -38,6 +38,8 @@ namespace PS.TaskPlanner.Infrastructure.Persistence.Repositories
 
         public async Task UpdateAsync(AppUser entity)
         {
+            entity.UpdateTimestamp();
+
             _dbContext.Entry(entity).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync();
         }

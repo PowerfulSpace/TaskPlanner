@@ -9,7 +9,7 @@
         /// <summary>
         /// Обновляет поле UpdatedAt текущим временем.
         /// </summary>
-        protected void UpdateTimestamp()
+        public void UpdateTimestamp()
         {
             UpdatedAt = DateTime.UtcNow;
         }
