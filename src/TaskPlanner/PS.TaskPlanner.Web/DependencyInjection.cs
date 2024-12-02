@@ -1,4 +1,7 @@
-﻿namespace PS.TaskPlanner.Web
+﻿using Mapster;
+using MapsterMapper;
+
+namespace PS.TaskPlanner.Web
 {
     public static class DependencyInjection
     {
@@ -6,7 +9,19 @@
         {
             services.AddControllersWithViews();
 
-            services.AddAuthorizationPolicies();
+            services
+                .AddMapsterConfiguration()
+                .AddAuthorizationPolicies();
+
+            return services;
+        }
+
+        private static IServiceCollection AddMapsterConfiguration(this IServiceCollection services)
+        {
+            var config = TypeAdapterConfig.GlobalSettings;
+            config.Scan(typeof(DependencyInjection).Assembly); // Сканируем текущую сборку для маппинга
+            services.AddSingleton(config);
+            services.AddScoped<IMapper, ServiceMapper>();
 
             return services;
         }

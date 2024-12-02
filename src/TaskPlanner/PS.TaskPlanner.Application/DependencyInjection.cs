@@ -1,6 +1,4 @@
 ﻿using FluentValidation;
-using Mapster;
-using MapsterMapper;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using PS.TaskPlanner.Application.Behaviors;
@@ -13,19 +11,8 @@ namespace PS.TaskPlanner.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services
-                .AddMapsterConfiguration()
                 .AddMediatRConfiguration()
                 .AddValidationConfiguration();
-
-            return services;
-        }
-
-        private static IServiceCollection AddMapsterConfiguration(this IServiceCollection services)
-        {
-            var config = TypeAdapterConfig.GlobalSettings;
-            config.Scan(typeof(DependencyInjection).Assembly); // Сканируем текущую сборку для маппинга
-            services.AddSingleton(config);
-            services.AddScoped<IMapper, ServiceMapper>();
 
             return services;
         }

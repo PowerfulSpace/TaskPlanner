@@ -7,64 +7,101 @@ namespace PS.TaskPlanner.Web.Controllers
 {
     public class AppUserController : Controller
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
         private readonly IMapper _mapper;
 
-        public AppUserController(IMediator mediator, IMapper mapper)
+        public AppUserController(ISender mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Получение списка всех пользователей.
+        /// </summary>
         public async Task<IActionResult> Index()
         {
-            throw new NotImplementedException();
+            var users = await _userRepository.GetAllAsync();
+            var userViewModels = _mapper.Map<IEnumerable<AppUserViewModel>>(users);
+            return View(userViewModels);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Create()
+        /// <summary>
+        /// Детали пользователя по ID.
+        /// </summary>
+        public async Task<IActionResult> Details(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+                return NotFound();
+
+            var userViewModel = _mapper.Map<AppUserViewModel>(user);
+            return View(userViewModel);
         }
+
+        /// <summary>
+        /// Редактирование данных пользователя (GET).
+        /// </summary>
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+                return NotFound();
+
+            var userViewModel = _mapper.Map<AppUserViewModel>(user);
+            return View(userViewModel);
+        }
+
+        /// <summary>
+        /// Редактирование данных пользователя (POST).
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create(AppUserViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, AppUserViewModel userViewModel)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return View(userViewModel);
+            }
+
+            var existingUser = await _userRepository.GetByIdAsync(id);
+            if (existingUser == null)
+                return NotFound();
+
+            var updatedUser = _mapper.Map(userViewModel, existingUser);
+            await _userRepository.UpdateAsync(updatedUser);
+
+            return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Удаление пользователя (GET).
+        /// </summary>
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+                return NotFound();
 
-        [HttpGet]
-        public async Task<IActionResult> Edit()
-        {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Edit(AppUserViewModel model)
-        {
-            throw new NotImplementedException();
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Delete()
-        {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Delete(AppUserViewModel model)
-        {
-            throw new NotImplementedException();
+            var userViewModel = _mapper.Map<AppUserViewModel>(user);
+            return View(userViewModel);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details()
+        /// <summary>
+        /// Удаление пользователя (POST).
+        /// </summary>
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Details(AppUserViewModel model)
-        {
-            throw new NotImplementedException();
+            var user = await _userRepository.GetByIdAsync(id);
+            if (user == null)
+                return NotFound();
+
+            // Здесь можно вызвать метод DeleteAsync, если он реализован в репозитории.
+            // await _userRepository.DeleteAsync(id);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

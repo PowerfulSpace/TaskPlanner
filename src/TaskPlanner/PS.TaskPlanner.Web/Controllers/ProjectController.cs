@@ -7,64 +7,132 @@ namespace PS.TaskPlanner.Web.Controllers
 {
     public class ProjectController : Controller
     {
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
         private readonly IMapper _mapper;
 
-        public ProjectController(IMediator mediator, IMapper mapper)
+        public ProjectController(ISender mediator, IMapper mapper)
         {
             _mediator = mediator;
             _mapper = mapper;
         }
 
-        [HttpGet]
+        /// <summary>
+        /// Получение списка всех проектов.
+        /// </summary>
         public async Task<IActionResult> Index()
         {
-            throw new NotImplementedException();
+            var projects = await _projectRepository.GetAllAsync();
+            var projectViewModels = _mapper.Map<IEnumerable<ProjectViewModel>>(projects);
+            return View(projectViewModels);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Create()
+        /// <summary>
+        /// Получение списка проектов пользователя по UserId.
+        /// </summary>
+        public async Task<IActionResult> ByUser(Guid userId)
         {
-            throw new NotImplementedException();
+            var projects = await _projectRepository.GetByUserIdAsync(userId);
+            var projectViewModels = _mapper.Map<IEnumerable<ProjectViewModel>>(projects);
+            return View("Index", projectViewModels);
         }
+
+        /// <summary>
+        /// Детали проекта по ID.
+        /// </summary>
+        public async Task<IActionResult> Details(Guid id)
+        {
+            var project = await _projectRepository.GetByIdAsync(id);
+            if (project == null)
+                return NotFound();
+
+            var projectViewModel = _mapper.Map<ProjectViewModel>(project);
+            return View(projectViewModel);
+        }
+
+        /// <summary>
+        /// Создание нового проекта (GET).
+        /// </summary>
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Создание нового проекта (POST).
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create(ProjectViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProjectViewModel projectViewModel)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+                return View(projectViewModel);
+
+            var project = _mapper.Map<Project>(projectViewModel);
+            await _projectRepository.AddAsync(project);
+
+            return RedirectToAction(nameof(Index));
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> Edit()
+        /// <summary>
+        /// Редактирование проекта (GET).
+        /// </summary>
+        public async Task<IActionResult> Edit(Guid id)
         {
-            throw new NotImplementedException();
+            var project = await _projectRepository.GetByIdAsync(id);
+            if (project == null)
+                return NotFound();
+
+            var projectViewModel = _mapper.Map<ProjectViewModel>(project);
+            return View(projectViewModel);
         }
+
+        /// <summary>
+        /// Редактирование проекта (POST).
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Edit(ProjectViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Guid id, ProjectViewModel projectViewModel)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+                return View(projectViewModel);
+
+            var existingProject = await _projectRepository.GetByIdAsync(id);
+            if (existingProject == null)
+                return NotFound();
+
+            var updatedProject = _mapper.Map(projectViewModel, existingProject);
+            await _projectRepository.UpdateAsync(updatedProject);
+
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete()
+        /// <summary>
+        /// Удаление проекта (GET).
+        /// </summary>
+        public async Task<IActionResult> Delete(Guid id)
         {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Delete(ProjectViewModel model)
-        {
-            throw new NotImplementedException();
+            var project = await _projectRepository.GetByIdAsync(id);
+            if (project == null)
+                return NotFound();
+
+            var projectViewModel = _mapper.Map<ProjectViewModel>(project);
+            return View(projectViewModel);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details()
+        /// <summary>
+        /// Удаление проекта (POST).
+        /// </summary>
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            throw new NotImplementedException();
-        }
-        [HttpPost]
-        public async Task<IActionResult> Details(ProjectViewModel model)
-        {
-            throw new NotImplementedException();
+            var project = await _projectRepository.GetByIdAsync(id);
+            if (project == null)
+                return NotFound();
+
+            await _projectRepository.DeleteAsync(id);
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
