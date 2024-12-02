@@ -1,6 +1,6 @@
-﻿namespace PS.TaskPlanner.Application.Dtos
+﻿namespace PS.TaskPlanner.Web.Models
 {
-    public class AppUserDto
+    public class AppUserViewModel
     {
         public Guid Id { get; set; } // ID пользователя
         public string UserName { get; set; } = string.Empty; // Имя пользователя

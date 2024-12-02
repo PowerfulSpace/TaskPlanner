@@ -1,6 +1,6 @@
-﻿namespace PS.TaskPlanner.Application.Dtos
+﻿namespace PS.TaskPlanner.Web.Models
 {
-    public class ProjectDto
+    public class ProjectViewModel
     {
         public Guid Id { get; set; } // ID проекта
         public string Title { get; set; } = string.Empty; // Название проекта
@@ -9,6 +9,6 @@
         public DateTime? EndDate { get; set; } // Дата окончания
         public Guid OwnerId { get; set; } // ID владельца проекта
         public string OwnerName { get; set; } = string.Empty; // Имя владельца проекта
-        public List<WorkTaskDto> Tasks { get; set; } = new(); // Связанные задачи
+        public List<WorkTaskViewModel> Tasks { get; set; } = new(); // Связанные задачи
     }
 }

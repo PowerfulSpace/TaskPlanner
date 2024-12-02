@@ -1,6 +1,6 @@
-﻿namespace PS.TaskPlanner.Application.Dtos
+﻿namespace PS.TaskPlanner.Web.Models
 {
-    public class WorkTaskDto
+    public class WorkTaskViewModel
     {
         public Guid Id { get; set; } // ID задачи
         public string Title { get; set; } = string.Empty; // Название задачи
