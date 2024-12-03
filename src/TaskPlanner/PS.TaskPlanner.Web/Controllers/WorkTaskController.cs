@@ -1,14 +1,16 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PS.TaskPlanner.Domain.Entities;
+using PS.TaskPlanner.Application.CQRS.WorkTasks.Commands.CreateWorkTask;
+using PS.TaskPlanner.Application.CQRS.WorkTasks.Commands.DeleteWorkTask;
+using PS.TaskPlanner.Application.CQRS.WorkTasks.Commands.UpdateWorkTask;
+using PS.TaskPlanner.Application.CQRS.WorkTasks.Queries.GetAllWorkTasks;
 using PS.TaskPlanner.Web.Models;
 
 namespace PS.TaskPlanner.Web.Controllers
 {
     public class WorkTaskController : Controller
     {
-
         private readonly ISender _mediator;
         private readonly IMapper _mapper;
 
@@ -18,132 +20,86 @@ namespace PS.TaskPlanner.Web.Controllers
             _mapper = mapper;
         }
 
-        /// <summary>
-        /// Получение списка всех задач.
-        /// </summary>
+        // 1. Просмотр всех задач
         public async Task<IActionResult> Index()
         {
-            var tasks = await _workTaskRepository.GetAllAsync();
-            var taskViewModels = _mapper.Map<IEnumerable<WorkTaskViewModel>>(tasks);
-            return View(taskViewModels);
+            var tasks = await _mediator.Send(new GetAllWorkTasksQuery());
+            var viewModel = _mapper.Map<List<WorkTaskViewModel>>(tasks);
+
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Получение списка задач по ID проекта.
-        /// </summary>
-        public async Task<IActionResult> ByProject(Guid projectId)
-        {
-            var tasks = await _workTaskRepository.GetByProjectIdAsync(projectId);
-            var taskViewModels = _mapper.Map<IEnumerable<WorkTaskViewModel>>(tasks);
-            return View("Index", taskViewModels);
-        }
-
-        /// <summary>
-        /// Получение списка задач по ID пользователя.
-        /// </summary>
-        public async Task<IActionResult> ByUser(Guid userId)
-        {
-            var tasks = await _workTaskRepository.GetByUserIdAsync(userId);
-            var taskViewModels = _mapper.Map<IEnumerable<WorkTaskViewModel>>(tasks);
-            return View("Index", taskViewModels);
-        }
-
-        /// <summary>
-        /// Детали задачи по ID.
-        /// </summary>
+        // 2. Просмотр задачи по ID
         public async Task<IActionResult> Details(Guid id)
         {
-            var task = await _workTaskRepository.GetByIdAsync(id);
-            if (task == null)
-                return NotFound();
+            var task = await _mediator.Send(new GetWorkTaskByIdQuery { Id = id });
+            if (task == null) return NotFound();
 
-            var taskViewModel = _mapper.Map<WorkTaskViewModel>(task);
-            return View(taskViewModel);
+            var viewModel = _mapper.Map<WorkTaskViewModel>(task);
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Создание новой задачи (GET).
-        /// </summary>
+        // 3. Создание задачи (GET)
+        [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new WorkTaskViewModel());
         }
 
-        /// <summary>
-        /// Создание новой задачи (POST).
-        /// </summary>
+        // 4. Создание задачи (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(WorkTaskViewModel taskViewModel)
+        public async Task<IActionResult> Create(WorkTaskViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(taskViewModel);
+            if (!ModelState.IsValid) return View(model);
 
-            var task = _mapper.Map<WorkTask>(taskViewModel);
-            await _workTaskRepository.AddAsync(task);
-
+            var command = _mapper.Map<CreateWorkTaskCommand>(model);
+            await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }
 
-        /// <summary>
-        /// Редактирование задачи (GET).
-        /// </summary>
+        // 5. Редактирование задачи (GET)
+        [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var task = await _workTaskRepository.GetByIdAsync(id);
-            if (task == null)
-                return NotFound();
+            var task = await _mediator.Send(new GetWorkTaskByIdQuery { Id = id });
+            if (task == null) return NotFound();
 
-            var taskViewModel = _mapper.Map<WorkTaskViewModel>(task);
-            return View(taskViewModel);
+            var viewModel = _mapper.Map<WorkTaskViewModel>(task);
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Редактирование задачи (POST).
-        /// </summary>
+        // 6. Редактирование задачи (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, WorkTaskViewModel taskViewModel)
+        public async Task<IActionResult> Edit(Guid id, WorkTaskViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(taskViewModel);
+            if (id != model.Id) return BadRequest();
 
-            var existingTask = await _workTaskRepository.GetByIdAsync(id);
-            if (existingTask == null)
-                return NotFound();
+            if (!ModelState.IsValid) return View(model);
 
-            var updatedTask = _mapper.Map(taskViewModel, existingTask);
-            await _workTaskRepository.UpdateAsync(updatedTask);
-
+            var command = _mapper.Map<UpdateWorkTaskCommand>(model);
+            await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }
 
-        /// <summary>
-        /// Удаление задачи (GET).
-        /// </summary>
+        // 7. Удаление задачи (GET)
+        [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var task = await _workTaskRepository.GetByIdAsync(id);
-            if (task == null)
-                return NotFound();
+            var task = await _mediator.Send(new GetWorkTaskByIdQuery { Id = id });
+            if (task == null) return NotFound();
 
-            var taskViewModel = _mapper.Map<WorkTaskViewModel>(task);
-            return View(taskViewModel);
+            var viewModel = _mapper.Map<WorkTaskViewModel>(task);
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Удаление задачи (POST).
-        /// </summary>
+        // 8. Удаление задачи (POST)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var task = await _workTaskRepository.GetByIdAsync(id);
-            if (task == null)
-                return NotFound();
-
-            await _workTaskRepository.DeleteAsync(id);
-
+            await _mediator.Send(new DeleteWorkTaskCommand { Id = id });
             return RedirectToAction(nameof(Index));
         }
     }

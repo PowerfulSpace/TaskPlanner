@@ -1,6 +1,9 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PS.TaskPlanner.Application.CQRS.AppUsers.Commands.UpdateAppUser;
+using PS.TaskPlanner.Application.CQRS.AppUsers.Queries.GetAllAppUsers;
+using PS.TaskPlanner.Application.CQRS.AppUsers.Queries.GetAppUserById;
 using PS.TaskPlanner.Web.Models;
 
 namespace PS.TaskPlanner.Web.Controllers
@@ -16,93 +19,48 @@ namespace PS.TaskPlanner.Web.Controllers
             _mapper = mapper;
         }
 
-        /// <summary>
-        /// Получение списка всех пользователей.
-        /// </summary>
+        // 1. Просмотр всех пользователей
         public async Task<IActionResult> Index()
         {
-            var users = await _userRepository.GetAllAsync();
-            var userViewModels = _mapper.Map<IEnumerable<AppUserViewModel>>(users);
-            return View(userViewModels);
+            var users = await _mediator.Send(new GetAllAppUsersQuery());
+            var viewModel = _mapper.Map<List<AppUserViewModel>>(users);
+
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Детали пользователя по ID.
-        /// </summary>
+        // 2. Просмотр пользователя по ID
         public async Task<IActionResult> Details(Guid id)
         {
-            var user = await _userRepository.GetByIdAsync(id);
-            if (user == null)
-                return NotFound();
+            var user = await _mediator.Send(new GetAppUserByIdQuery { Id = id });
+            if (user == null) return NotFound();
 
-            var userViewModel = _mapper.Map<AppUserViewModel>(user);
-            return View(userViewModel);
+            var viewModel = _mapper.Map<AppUserViewModel>(user);
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Редактирование данных пользователя (GET).
-        /// </summary>
+        // 3. Редактирование пользователя (GET)
+        [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var user = await _userRepository.GetByIdAsync(id);
-            if (user == null)
-                return NotFound();
+            var user = await _mediator.Send(new GetAppUserByIdQuery { Id = id });
+            if (user == null) return NotFound();
 
-            var userViewModel = _mapper.Map<AppUserViewModel>(user);
-            return View(userViewModel);
+            var viewModel = _mapper.Map<AppUserViewModel>(user);
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Редактирование данных пользователя (POST).
-        /// </summary>
+        // 4. Редактирование пользователя (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, AppUserViewModel userViewModel)
+        public async Task<IActionResult> Edit(Guid id, AppUserViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(userViewModel);
-            }
+            if (id != model.Id) return BadRequest();
 
-            var existingUser = await _userRepository.GetByIdAsync(id);
-            if (existingUser == null)
-                return NotFound();
+            if (!ModelState.IsValid) return View(model);
 
-            var updatedUser = _mapper.Map(userViewModel, existingUser);
-            await _userRepository.UpdateAsync(updatedUser);
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        /// <summary>
-        /// Удаление пользователя (GET).
-        /// </summary>
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var user = await _userRepository.GetByIdAsync(id);
-            if (user == null)
-                return NotFound();
-
-            var userViewModel = _mapper.Map<AppUserViewModel>(user);
-            return View(userViewModel);
-        }
-
-        /// <summary>
-        /// Удаление пользователя (POST).
-        /// </summary>
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var user = await _userRepository.GetByIdAsync(id);
-            if (user == null)
-                return NotFound();
-
-            // Здесь можно вызвать метод DeleteAsync, если он реализован в репозитории.
-            // await _userRepository.DeleteAsync(id);
-
+            var command = _mapper.Map<UpdateAppUserCommand>(model);
+            await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }
     }
 }
-// Исправить ошибки для репозитория

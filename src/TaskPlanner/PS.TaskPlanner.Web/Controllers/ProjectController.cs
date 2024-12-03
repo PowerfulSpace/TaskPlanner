@@ -1,6 +1,11 @@
 ﻿using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using PS.TaskPlanner.Application.CQRS.Projects.Commands.CreateProject;
+using PS.TaskPlanner.Application.CQRS.Projects.Commands.DeleteProject;
+using PS.TaskPlanner.Application.CQRS.Projects.Commands.UpdateProject;
+using PS.TaskPlanner.Application.CQRS.Projects.Queries.GetAllProjects;
+using PS.TaskPlanner.Application.CQRS.Projects.Queries.GetProjectById;
 using PS.TaskPlanner.Web.Models;
 
 namespace PS.TaskPlanner.Web.Controllers
@@ -16,122 +21,86 @@ namespace PS.TaskPlanner.Web.Controllers
             _mapper = mapper;
         }
 
-        /// <summary>
-        /// Получение списка всех проектов.
-        /// </summary>
+        // 1. Просмотр всех проектов
         public async Task<IActionResult> Index()
         {
-            var projects = await _projectRepository.GetAllAsync();
-            var projectViewModels = _mapper.Map<IEnumerable<ProjectViewModel>>(projects);
-            return View(projectViewModels);
+            var projects = await _mediator.Send(new GetAllProjectsQuery());
+            var viewModel = _mapper.Map<List<ProjectViewModel>>(projects);
+
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Получение списка проектов пользователя по UserId.
-        /// </summary>
-        public async Task<IActionResult> ByUser(Guid userId)
-        {
-            var projects = await _projectRepository.GetByUserIdAsync(userId);
-            var projectViewModels = _mapper.Map<IEnumerable<ProjectViewModel>>(projects);
-            return View("Index", projectViewModels);
-        }
-
-        /// <summary>
-        /// Детали проекта по ID.
-        /// </summary>
+        // 2. Просмотр проекта по ID
         public async Task<IActionResult> Details(Guid id)
         {
-            var project = await _projectRepository.GetByIdAsync(id);
-            if (project == null)
-                return NotFound();
+            var project = await _mediator.Send(new GetProjectByIdQuery { Id = id });
+            if (project == null) return NotFound();
 
-            var projectViewModel = _mapper.Map<ProjectViewModel>(project);
-            return View(projectViewModel);
+            var viewModel = _mapper.Map<ProjectViewModel>(project);
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Создание нового проекта (GET).
-        /// </summary>
+        // 3. Создание проекта (GET)
+        [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(new ProjectViewModel());
         }
 
-        /// <summary>
-        /// Создание нового проекта (POST).
-        /// </summary>
+        // 4. Создание проекта (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProjectViewModel projectViewModel)
+        public async Task<IActionResult> Create(ProjectViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(projectViewModel);
+            if (!ModelState.IsValid) return View(model);
 
-            var project = _mapper.Map<Project>(projectViewModel);
-            await _projectRepository.AddAsync(project);
-
+            var command = _mapper.Map<CreateProjectCommand>(model);
+            await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }
 
-        /// <summary>
-        /// Редактирование проекта (GET).
-        /// </summary>
+        // 5. Редактирование проекта (GET)
+        [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var project = await _projectRepository.GetByIdAsync(id);
-            if (project == null)
-                return NotFound();
+            var project = await _mediator.Send(new GetProjectByIdQuery { Id = id });
+            if (project == null) return NotFound();
 
-            var projectViewModel = _mapper.Map<ProjectViewModel>(project);
-            return View(projectViewModel);
+            var viewModel = _mapper.Map<ProjectViewModel>(project);
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Редактирование проекта (POST).
-        /// </summary>
+        // 6. Редактирование проекта (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, ProjectViewModel projectViewModel)
+        public async Task<IActionResult> Edit(Guid id, ProjectViewModel model)
         {
-            if (!ModelState.IsValid)
-                return View(projectViewModel);
+            if (id != model.Id) return BadRequest();
 
-            var existingProject = await _projectRepository.GetByIdAsync(id);
-            if (existingProject == null)
-                return NotFound();
+            if (!ModelState.IsValid) return View(model);
 
-            var updatedProject = _mapper.Map(projectViewModel, existingProject);
-            await _projectRepository.UpdateAsync(updatedProject);
-
+            var command = _mapper.Map<UpdateProjectCommand>(model);
+            await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }
 
-        /// <summary>
-        /// Удаление проекта (GET).
-        /// </summary>
+        // 7. Удаление проекта (GET)
+        [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var project = await _projectRepository.GetByIdAsync(id);
-            if (project == null)
-                return NotFound();
+            var project = await _mediator.Send(new GetProjectByIdQuery { Id = id });
+            if (project == null) return NotFound();
 
-            var projectViewModel = _mapper.Map<ProjectViewModel>(project);
-            return View(projectViewModel);
+            var viewModel = _mapper.Map<ProjectViewModel>(project);
+            return View(viewModel);
         }
 
-        /// <summary>
-        /// Удаление проекта (POST).
-        /// </summary>
+        // 8. Удаление проекта (POST)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var project = await _projectRepository.GetByIdAsync(id);
-            if (project == null)
-                return NotFound();
-
-            await _projectRepository.DeleteAsync(id);
-
+            await _mediator.Send(new DeleteProjectCommand { Id = id });
             return RedirectToAction(nameof(Index));
         }
     }
