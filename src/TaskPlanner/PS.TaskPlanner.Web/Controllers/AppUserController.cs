@@ -22,7 +22,10 @@ namespace PS.TaskPlanner.Web.Controllers
         // 1. Просмотр всех пользователей
         public async Task<IActionResult> Index()
         {
-            var users = await _mediator.Send(new GetAllAppUsersQuery());
+            var query = new GetAllAppUsersQuery();
+
+            var users = await _mediator.Send(query);
+
             var viewModel = _mapper.Map<List<AppUserViewModel>>(users);
 
             return View(viewModel);
@@ -31,7 +34,9 @@ namespace PS.TaskPlanner.Web.Controllers
         // 2. Просмотр пользователя по ID
         public async Task<IActionResult> Details(Guid id)
         {
-            var user = await _mediator.Send(new GetAppUserByIdQuery { Id = id });
+            var query = new GetAppUserByIdQuery() { Id = id };
+
+            var user = await _mediator.Send(query);
             if (user == null) return NotFound();
 
             var viewModel = _mapper.Map<AppUserViewModel>(user);
@@ -42,7 +47,9 @@ namespace PS.TaskPlanner.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var user = await _mediator.Send(new GetAppUserByIdQuery { Id = id });
+            var query = new GetAppUserByIdQuery { Id = id };
+
+            var user = await _mediator.Send(query);
             if (user == null) return NotFound();
 
             var viewModel = _mapper.Map<AppUserViewModel>(user);
