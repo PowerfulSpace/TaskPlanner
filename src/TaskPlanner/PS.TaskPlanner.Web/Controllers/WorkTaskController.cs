@@ -23,7 +23,9 @@ namespace PS.TaskPlanner.Web.Controllers
         // 1. Просмотр всех задач
         public async Task<IActionResult> Index()
         {
-            var tasks = await _mediator.Send(new GetAllWorkTasksQuery());
+            var query = new GetAllWorkTasksQuery();
+
+            var tasks = await _mediator.Send(query);
             var viewModel = _mapper.Map<List<WorkTaskViewModel>>(tasks);
 
             return View(viewModel);
@@ -32,7 +34,9 @@ namespace PS.TaskPlanner.Web.Controllers
         // 2. Просмотр задачи по ID
         public async Task<IActionResult> Details(Guid id)
         {
-            var task = await _mediator.Send(new GetWorkTaskByIdQuery { Id = id });
+            var query = new GetWorkTaskByIdQuery { Id = id };
+
+            var task = await _mediator.Send(query);
             if (task == null) return NotFound();
 
             var viewModel = _mapper.Map<WorkTaskViewModel>(task);
@@ -62,7 +66,9 @@ namespace PS.TaskPlanner.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var task = await _mediator.Send(new GetWorkTaskByIdQuery { Id = id });
+            var query = new GetWorkTaskByIdQuery { Id = id };
+
+            var task = await _mediator.Send(query);
             if (task == null) return NotFound();
 
             var viewModel = _mapper.Map<WorkTaskViewModel>(task);
@@ -72,9 +78,10 @@ namespace PS.TaskPlanner.Web.Controllers
         // 6. Редактирование задачи (POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, WorkTaskViewModel model)
+        public async Task<IActionResult> Edit(WorkTaskViewModel model)
         {
-            if (id != model.Id) return BadRequest();
+            // Проверяем, что Id в модели совпадает с переданным Id
+            if (model.Id == Guid.Empty) return BadRequest("Invalid task ID");
 
             if (!ModelState.IsValid) return View(model);
 
@@ -97,9 +104,11 @@ namespace PS.TaskPlanner.Web.Controllers
         // 8. Удаление задачи (POST)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(WorkTaskViewModel model)
         {
-            await _mediator.Send(new DeleteWorkTaskCommand { Id = id });
+            var command = new DeleteWorkTaskCommand { Id = model.Id };
+
+            await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }
     }
